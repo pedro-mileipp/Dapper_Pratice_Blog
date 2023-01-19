@@ -10,7 +10,6 @@
 - O primeiro commit está finalizado o CRUD, os posteriores serão a implementação de Repository Pattern.
 
 <br>
-<br>
 
 # English
 
