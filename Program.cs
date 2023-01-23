@@ -3,38 +3,33 @@ using Microsoft.Data.SqlClient;
 using Blog.Models;
 using Dapper.Contrib.Extensions;
 using Dapper;
+using Blog.Repositories;
 
 namespace Blog{
     class Program{
         private const string CONNECTION_STRING = "Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$; Trusted_Connection=False; TrustServerCertificate=True";
         static void Main(){
-
+            var connection = new SqlConnection(CONNECTION_STRING);
+            connection.Open();
             /* CRUD */
             // CreateUser();
             // UpdateUser();
             // DeleteUser();
             // ReadUser();
-            // ReadUsers();
+            ReadUsers(connection);
+            connection.Close();
+        }
 
-            /*REPOSITORY PATTERN*/
+        public static void ReadUsers(SqlConnection connection){
             
+            var repository = new UserRepository(connection);
+            var users = repository.Get();   
+
+            foreach(var user in users){
+                Console.WriteLine(user.Name);
+            }     
         }
-
-        public static void ReadUsers(){
-            using(var connection = new SqlConnection(CONNECTION_STRING)){
-                var users = connection.GetAll<User>(); // o método GetAll faz a sintaxe SQL para pegar as informações da tabela user    
-
-                foreach(var user in users){
-                    Console.WriteLine(user.Name);
-                }
-
-                /* FORMA ANÁLOGA ESCREVENDO A QUERY */
-                // var listNames = connection.Query<User>("SELECT [Name] FROM [User]");
-                // foreach(var user in listNames){
-                //     Console.WriteLine(user.Name);
-                // }  
-            }
-        }
+    
         public static void ReadUser(){
             using(var connection = new SqlConnection(CONNECTION_STRING)){
                 var user = connection.Get<User>(2); // O metódo Get pega especificamente 
